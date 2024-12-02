@@ -2,7 +2,11 @@
 
 An interior design AI app made using ControlNet-StableDiffusion model.
 
-![](./readme_images/Int.AI.mp4)
+
+https://github.com/user-attachments/assets/27ef984c-1a60-4f0b-afff-ef0dbba8cd3f
+
+
+
 
 ## Pipeline Architecture
 
