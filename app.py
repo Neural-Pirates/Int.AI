@@ -2,16 +2,16 @@ import streamlit as st
 from PIL import Image, ImageDraw
 import os
 import time
-from predictor import setup_models, predict
+from src.predictor import setup_models, predict
 
 if "models" not in st.session_state:
-        pipe, seg_image_processor, image_segmentor, mlsd_processor = setup_models()
-        st.session_state.models = {
-            "pipe": pipe,
-            "seg_image_processor": seg_image_processor,
-            "image_segmentor": image_segmentor,
-            "mlsd_processor": mlsd_processor,
-        }
+    pipe, seg_image_processor, image_segmentor, mlsd_processor = setup_models()
+    st.session_state.models = {
+        "pipe": pipe,
+        "seg_image_processor": seg_image_processor,
+        "image_segmentor": image_segmentor,
+        "mlsd_processor": mlsd_processor,
+    }
 else:
     models = st.session_state.models
     pipe = models["pipe"]
@@ -67,7 +67,7 @@ UPLOAD_DIR = "uploads"
 OUTPUT_DIR = "outputs"
 
 os.makedirs(UPLOAD_DIR, exist_ok=True)
-os.makedirs(OUTPUT_DIR, exist_ok=True) 
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 
 def save_uploaded_file(uploaded_file):
@@ -94,15 +94,15 @@ def show_example(example: int):
     col_upload, col_processed = st.columns([1, 1], gap="small")
     with col_upload:
         st.markdown(
-                "<h4 style='text-align: center;'>Uploaded Image</h4>",
-                unsafe_allow_html=True,
-            )
+            "<h4 style='text-align: center;'>Uploaded Image</h4>",
+            unsafe_allow_html=True,
+        )
         st.image(f"tests/{example}.jpg", use_container_width=True)
     with col_processed:
         st.markdown(
-                "<h4 style='text-align: center;'>Processed Image</h4>",
-                unsafe_allow_html=True,
-            )
+            "<h4 style='text-align: center;'>Processed Image</h4>",
+            unsafe_allow_html=True,
+        )
         st.image(f"tests/{example}_out.png", use_container_width=True)
 
 
@@ -152,7 +152,7 @@ with col_side:
 
     # advanced options
     with st.expander("Advanced Options"):
-        neg_prompt = st.text_input("Negative Prompts" , value="")
+        neg_prompt = st.text_input("Negative Prompts", value="")
 
     submit_button = st.button("Submit")
     if submit_button:
@@ -167,7 +167,7 @@ with col_side:
 
 
 with col_main:
-    if st.session_state.image_ready :
+    if st.session_state.image_ready:
         col_upload, col_processed = st.columns([1, 1], gap="small")
         with col_upload:
             st.markdown(
@@ -192,26 +192,37 @@ with col_main:
                     output_path = predict(
                         pipe,
                         image_path=img_path,
-                        prompt = prompt,
+                        prompt=prompt,
                         negative_prompt=neg_prompt if neg_prompt else "",
                         seg_image_processor=seg_image_processor,
                         image_segmentor=image_segmentor,
                         mlsd_processor=mlsd_processor,
                         seed=None,
-                        output_dir="outputs")
-                                
+                        output_dir="outputs",
+                    )
+
                 st.image(output_path, use_container_width=True)
 
-
     st.markdown("### Usage Examples ", unsafe_allow_html=True)
-    st.markdown("<p style = 'text-align : left; font-size: 1em; color: red;'>* make sure there is no data uploaded before selecting an example.</p>",unsafe_allow_html=True)
+    st.markdown(
+        "<p style = 'text-align : left; font-size: 1em; color: red;'>* make sure there is no data uploaded before selecting an example.</p>",
+        unsafe_allow_html=True,
+    )
     col1, col2, col3, col4 = st.columns(4, gap="small")
 
-    if col1.button("Example Alpha", key="ex1", help="Use Example 0", use_container_width=True):
+    if col1.button(
+        "Example Alpha", key="ex1", help="Use Example 0", use_container_width=True
+    ):
         show_example(0)
-    if col2.button("Example Beta", key="ex2", help="Use Example 1", use_container_width=True):
+    if col2.button(
+        "Example Beta", key="ex2", help="Use Example 1", use_container_width=True
+    ):
         show_example(1)
-    if col3.button("Example Gamma", key="ex3", help="Use Example 2", use_container_width=True):
+    if col3.button(
+        "Example Gamma", key="ex3", help="Use Example 2", use_container_width=True
+    ):
         show_example(2)
-    if col4.button("Example Sigma", key="ex4", help="Use Example 3", use_container_width=True):
+    if col4.button(
+        "Example Sigma", key="ex4", help="Use Example 3", use_container_width=True
+    ):
         show_example(3)
